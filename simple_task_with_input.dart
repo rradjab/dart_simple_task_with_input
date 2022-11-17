@@ -16,13 +16,15 @@ void main() {
   var productList = ["Klaviatura", "Mouse", "Veb Kamera", "Flash Kart"];
   var payingMethodList = ["Kapital Bank", "Xalq Bank", "Ünvana", "Şəxsən"];
   String noMoney = "Balansda kifayət qədər məbləğ yoxdur";
+  String noSuchPayment = "Ödəmə növü mövcud deyil";
+  String productName;
   String payingMethod;
+  String userName;
   double? productPrice;
   double totalPrice;
   double balance;
-  int productCount;
   bool isLogged;
-  String userName;
+  int productCount;
   int payingPart = 0;
   int comission = 0;
 
@@ -33,19 +35,25 @@ void main() {
 
   switch (stdin.readLineSync().toString()) {
     case "1":
+      productName = productList[0];
       productPrice = 15.70;
       break;
     case "2":
+      productName = productList[1];
       productPrice = 10.20;
       break;
     case "3":
+      productName = productList[2];
       productPrice = 25.90;
       break;
     case "4":
+      productName = productList[3];
       productPrice = 30;
       break;
     default:
+      productName = "";
       print("Mal mövcud deyil");
+      break;
   }
 
   if (productPrice != null) {
@@ -64,9 +72,17 @@ void main() {
           payingMethodList[int.parse(stdin.readLineSync().toString()) - 1]
               .toLowerCase();
       if (payingMethod == "ünvana") {
-        print("Ünvana göndəriş, məbləğ: ${totalPrice + 5} Azn");
+        print("*" * 50 + "\nHörmətli $userName!");
+        print("$productCount ədəd $productName");
+        print("Ümumi məbləğ: ${(totalPrice).toStringAsFixed(2)}");
+        print("Göndəriş xidməinin məbləği: 5");
+        print(
+            "Ünvana göndəriş, məbləğ:  ${(totalPrice + 5).toStringAsFixed(2)} Azn");
       } else if (payingMethod == "şəxsən") {
-        print("Gəlib götürə bilərsiniz, məbləğ: $totalPrice Azn");
+        print("*" * 50 + "\nHörmətli $userName!");
+        print("$productCount ədəd $productName");
+        print(
+            "Gəlib götürə bilərsiniz, məbləğ:  ${(totalPrice).toStringAsFixed(2)} Azn");
       } else {
         switch (payingMethod.toLowerCase()) {
           case "kapital bank":
@@ -83,12 +99,15 @@ void main() {
               case "3":
                 payingPart = 1;
                 break;
+              default:
+                print(noSuchPayment);
+                break;
             }
             break;
           case "xalq bank":
             comission = 30;
             print("Ödəmə üsulu:");
-            print("1) 3 hissəyə\n 2) Nağd");
+            print("1) 3 hissəyə\n2) Nağd");
             switch (stdin.readLineSync().toString()) {
               case "1":
                 payingPart = 3;
@@ -96,26 +115,33 @@ void main() {
               case "2":
                 payingPart = 1;
                 break;
+              default:
+                print(noSuchPayment);
+                break;
             }
             break;
         }
         if (payingPart > 0) {
           print("Balans:");
           balance = double.parse(stdin.readLineSync().toString());
-
+          print("*" * 50 + "\nHörmətli $userName!");
+          print("$productCount ədəd $productName");
           if (payingPart == 1) {
             if (balance >= totalPrice) {
               print("$payingMethod ilə tam ödəmə, məbləğ: $totalPrice Azn");
+              print("Balans: ${(balance - totalPrice).toStringAsFixed(2)}");
             } else {
               print(noMoney);
             }
           } else {
-            print("Ümumi məbləğ: $totalPrice");
+            print("Ümumi məbləğ: ${(totalPrice).toStringAsFixed(2)}");
             totalPrice = totalPrice + (totalPrice * comission) / 100;
-            print("Faizlə: $totalPrice");
+            print("Faizlə: ${(totalPrice).toStringAsFixed(2)}");
             if (balance >= totalPrice) {
+              print("$payingMethod ilə $payingPart ay ərzində, ilkin ödəniş:" +
+                  "${(totalPrice / payingPart).toStringAsFixed(2)}");
               print(
-                  "$payingMethod ilə $payingPart ay ərzində, ilkin ödəniş: ${(totalPrice / payingPart).toStringAsFixed(2)}");
+                  "Balans: ${(balance - totalPrice / payingPart).toStringAsFixed(2)}");
             } else {
               print(noMoney);
             }
